@@ -39,7 +39,7 @@ const AccountManagement = () => {
         phone: ''
     });
 
-    const API_BASE = '(\\/api';
+    const API_BASE = '/api';
 
     // Get admin ID from localStorage (assuming it's stored during login)
     const getAdminId = () => {

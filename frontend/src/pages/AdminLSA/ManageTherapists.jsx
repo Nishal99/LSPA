@@ -20,6 +20,7 @@ import {
     FiUser
 } from 'react-icons/fi';
 import axios from 'axios';
+import { getApiUrl } from '../../utils/apiConfig';
 import Swal from 'sweetalert2';
 
 const ManageTherapists = () => {
@@ -55,7 +56,7 @@ const ManageTherapists = () => {
 
             // Try API first, but fallback to mock data if API fails
             try {
-                const response = await axios.get('(\\/api/lsa/therapists', {
+                const response = await axios.get(getApiUrl('/api/lsa/therapists'), {
                     timeout: 5000
                 });
                 if (response.data.success && response.data.data.therapists.length > 0) {
@@ -133,7 +134,7 @@ const ManageTherapists = () => {
 
     const handleViewDetails = async (therapist) => {
         try {
-            const response = await axios.get(`(\\/api/therapists/admin/${therapist.id}`, {
+            const response = await axios.get(getApiUrl(`/api/therapists/admin/${therapist.id}`), {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             if (response.data.success) {
@@ -163,7 +164,7 @@ const ManageTherapists = () => {
             });
 
             if (result.isConfirmed) {
-                await axios.put(`(\\/api/lsa/therapists/${therapistId}/approve`, {
+                await axios.put(getApiUrl(`/api/lsa/therapists/${therapistId}/approve`), {
                     admin_comments: 'Approved by AdminLSA'
                 });
 
@@ -204,7 +205,7 @@ const ManageTherapists = () => {
             });
 
             if (result.isConfirmed) {
-                await axios.put(`(\\/api/lsa/therapists/${therapistId}/reject`, {
+                await axios.put(getApiUrl(`/api/lsa/therapists/${therapistId}/reject`), {
                     rejection_reason: result.value,
                     admin_comments: 'Rejected by AdminLSA'
                 });
@@ -240,7 +241,7 @@ const ManageTherapists = () => {
             });
 
             if (result.isConfirmed) {
-                await axios.put(`(\\/api/lsa/therapists/${therapistId}/remove-termination`);
+                await axios.put(getApiUrl(`/api/lsa/therapists/${therapistId}/remove-termination`));
 
                 Swal.fire({
                     icon: 'success',
@@ -463,7 +464,7 @@ const ManageTherapists = () => {
                                                 <div className="flex-shrink-0 h-10 w-10">
                                                     {therapist.id ? (
                                                         <img
-                                                            src={`(\\/api/lsa/therapists/${therapist.id}/document/therapist_image?action=view`}
+                                                            src={getApiUrl(`/api/lsa/therapists/${therapist.id}/document/therapist_image?action=view`)}
                                                             alt={`${therapist.first_name || therapist.fname} ${therapist.last_name || therapist.lname}`}
                                                             className="h-10 w-10 rounded-full object-cover border-2 border-[#001F3F]"
                                                             onError={(e) => {
@@ -728,7 +729,7 @@ const ManageTherapists = () => {
                                             {doc.path ? (
                                                 <div className="flex gap-2 mt-1">
                                                     <button
-                                                        onClick={() => window.open(`(\\/api/lsa/therapists/${selectedTherapist.id}/document/${doc.type}?action=view`, '_blank')}
+                                                        onClick={() => window.open(getApiUrl(`/api/lsa/therapists/${selectedTherapist.id}/document/${doc.type}?action=view`), '_blank')}
                                                         className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center gap-1"
                                                     >
                                                         <FiEye size={12} />
@@ -737,7 +738,7 @@ const ManageTherapists = () => {
                                                     <button
                                                         onClick={() => {
                                                             const link = document.createElement('a');
-                                                            link.href = `(\\/api/lsa/therapists/${selectedTherapist.id}/document/${doc.type}?action=download`;
+                                                            link.href = getApiUrl(`/api/lsa/therapists/${selectedTherapist.id}/document/${doc.type}?action=download`);
                                                             link.download = `therapist_${selectedTherapist.id}_${doc.type}`;
                                                             link.click();
                                                         }}

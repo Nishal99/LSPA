@@ -41,6 +41,7 @@ import {
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import io from 'socket.io-client';
+import { getApiUrl, API_CONFIG } from '../../utils/apiConfig';
 import assets from '../../assets/images/images';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -64,14 +65,12 @@ const fixBankSlipUrl = (bankSlipPath) => {
     bankSlipUrl = bankSlipUrl.replace('/api/bank-slip/', '/uploads/payment-slips/');
   }
 
-  // Ensure it starts with the correct base URL
+  // Ensure it starts with the correct absolute URL (use API host when necessary)
   if (!bankSlipUrl.startsWith('http')) {
-    if (bankSlipUrl.startsWith('/uploads/')) {
-      bankSlipUrl = `(\\${bankSlipUrl}`;
-    } else if (bankSlipUrl.startsWith('uploads/')) {
-      bankSlipUrl = `(\\/${bankSlipUrl}`;
+    if (bankSlipUrl.startsWith('/')) {
+      bankSlipUrl = getApiUrl(bankSlipUrl);
     } else {
-      bankSlipUrl = `(\\/uploads/payment-slips/${bankSlipUrl}`;
+      bankSlipUrl = getApiUrl(`/uploads/payment-slips/${bankSlipUrl}`);
     }
   }
 
@@ -105,7 +104,7 @@ const AdminLSA = () => {
 
   // Initialize Socket.io connection for LSA
   useEffect(() => {
-    const newSocket = io('(\\');
+    const newSocket = io(API_CONFIG.socketUrl);
 
     newSocket.emit('join_lsa');
 
@@ -231,8 +230,8 @@ const AdminLSA = () => {
     activity: { therapist_actions_today: 0, spa_actions_today: 0, therapist_actions_week: 0, spa_actions_week: 0 }
   });
 
-  // API base URL
-  const API_BASE = '(\\/api';
+  // API base URL (absolute backend API host + /api)
+  const API_BASE = `${API_CONFIG.baseUrl}/api`;
 
   // Simple headers without authentication
   const getHeaders = () => {

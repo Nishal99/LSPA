@@ -49,7 +49,7 @@ const PaymentPlans = () => {
 
     const checkPaymentStatus = async () => {
         try {
-            const response = await axios.get('(\\/api/admin-spa-enhanced/payment-status', {
+            const response = await axios.get(getApiUrl('/api/admin-spa-enhanced/payment-status'), {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
 
@@ -83,7 +83,7 @@ const PaymentPlans = () => {
 
     const fetchRejectedPayments = async () => {
         try {
-            const response = await axios.get('(\\/api/admin-spa-enhanced/rejected-payments', {
+            const response = await axios.get(getApiUrl('/api/admin-spa-enhanced/rejected-payments'), {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             if (response.data.success) {
@@ -368,7 +368,7 @@ const PaymentPlans = () => {
                 }
             };
 
-            const response = await axios.post('(\\/api/admin-spa-enhanced/process-card-payment', paymentData, {
+            const response = await axios.post(getApiUrl('/api/admin-spa-enhanced/process-card-payment'), paymentData, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
 
@@ -442,7 +442,7 @@ const PaymentPlans = () => {
             formData.append('amount', planData.price);
             formData.append('transfer_proof', bankSlipFile);
 
-            const response = await axios.post('(\\/api/admin-spa-enhanced/process-bank-transfer', formData, {
+            const response = await axios.post(getApiUrl('/api/admin-spa-enhanced/process-bank-transfer'), formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'multipart/form-data'
@@ -544,7 +544,7 @@ const PaymentPlans = () => {
             formData.append('payment_id', selectedRejectedPayment.id);
             formData.append('transfer_proof', resubmissionFile);
 
-            const response = await axios.post('(\\/api/admin-spa-enhanced/resubmit-payment', formData, {
+            const response = await axios.post(getApiUrl('/api/admin-spa-enhanced/resubmit-payment'), formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'multipart/form-data'

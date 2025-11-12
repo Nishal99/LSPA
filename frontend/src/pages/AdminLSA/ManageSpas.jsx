@@ -19,6 +19,7 @@ import {
     FiShield
 } from 'react-icons/fi';
 import axios from 'axios';
+import { getApiUrl } from '../../utils/apiConfig';
 import Swal from 'sweetalert2';
 
 const ManageSpas = () => {
@@ -99,7 +100,7 @@ const ManageSpas = () => {
     const fetchSpas = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('(\\/api/lsa/spas', {
+            const response = await axios.get(getApiUrl('/api/lsa/spas'), {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
 
@@ -330,16 +331,16 @@ const ManageSpas = () => {
 
             switch (action) {
                 case 'approve':
-                    endpoint = `(\\/api/admin-lsa-enhanced/spas/${spaId}/approve`;
+                    endpoint = getApiUrl(`/api/admin-lsa-enhanced/spas/${spaId}/approve`);
                     successMessage = 'Spa approved successfully';
                     break;
                 case 'reject':
-                    endpoint = `(\\/api/admin-lsa-enhanced/spas/${spaId}/reject`;
+                    endpoint = getApiUrl(`/api/admin-lsa-enhanced/spas/${spaId}/reject`);
                     successMessage = 'Spa rejected successfully';
                     payload = { reason };
                     break;
                 case 'blacklist':
-                    endpoint = `(\\/api/admin-lsa-enhanced/spas/${spaId}/blacklist`;
+                    endpoint = getApiUrl(`/api/admin-lsa-enhanced/spas/${spaId}/blacklist`);
                     successMessage = 'Spa blacklisted successfully';
                     payload = { reason };
                     break;
@@ -443,7 +444,7 @@ const ManageSpas = () => {
             setLoading(true);
 
             // Fetch detailed spa information with payment details
-            const response = await axios.get(`(\\/api/lsa/spas/${spa.spa_id}/detailed`, {
+            const response = await axios.get(getApiUrl(`/api/lsa/spas/${spa.spa_id}/detailed`), {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
 
@@ -491,7 +492,7 @@ const ManageSpas = () => {
             }
 
             // Fallback to API endpoint
-            const url = `(\\/api/lsa/spas/${spaId}/documents/${documentType}?action=view`;
+            const url = getApiUrl(`/api/lsa/spas/${spaId}/documents/${documentType}?action=view`);
             window.open(url, '_blank');
         } catch (error) {
             console.error('Error viewing document:', error);
@@ -533,7 +534,7 @@ const ManageSpas = () => {
             }
 
             // Fallback to API endpoint
-            const url = `(\\/api/lsa/spas/${spaId}/documents/${documentType}?action=download`;
+            const url = getApiUrl(`/api/lsa/spas/${spaId}/documents/${documentType}?action=download`);
             const link = document.createElement('a');
             link.href = url;
             link.download = '';

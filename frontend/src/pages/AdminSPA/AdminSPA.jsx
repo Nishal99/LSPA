@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import io from 'socket.io-client';
+import { getApiUrl } from '../../utils/apiConfig';
 import {
     FiHome,
     FiCreditCard,
@@ -173,7 +174,7 @@ const AddTherapist = () => {
         }
 
         try {
-            const response = await fetch('(\\/api/admin-spa-new/check-nic', {
+            const response = await fetch(getApiUrl('/api/admin-spa-new/check-nic'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -223,7 +224,7 @@ const AddTherapist = () => {
         }
 
         try {
-            const response = await fetch('(\\/api/admin-spa-new/check-nic', {
+            const response = await fetch(getApiUrl('/api/admin-spa-new/check-nic'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -782,7 +783,7 @@ const AddTherapist = () => {
                                     {/* Instructions */}
                                     <div className="text-center mt-4">
                                         <p className="text-xs text-gray-500">
-                                            Upload from gallery or capture with live camera • PNG, JPG only • Max 5MB
+                                            Upload from gallery or capture with live camera ï¿½ PNG, JPG only ï¿½ Max 5MB
                                         </p>
                                     </div>
 
@@ -1430,7 +1431,7 @@ const ViewTherapists = () => {
                         <div key={therapist.id} className="bg-gray-50 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
                             <div className="flex items-center space-x-3 mb-4">
                                 <img
-                                    src={`(\\/api/lsa/therapists/${therapist.id}/document/therapist_image?action=view`}
+                                    src={getApiUrl(`/api/lsa/therapists/${therapist.id}/document/therapist_image?action=view`)}
                                     alt={therapist.name}
                                     className="w-16 h-16 rounded-full object-cover bg-gray-200 border-2 border-[#0A1428]"
                                     onError={(e) => {
@@ -1496,13 +1497,13 @@ const ViewTherapists = () => {
                                 onClick={() => setShowModal(false)}
                                 className="text-gray-400 hover:text-gray-600 text-2xl"
                             >
-                                ×
+                                ï¿½
                             </button>
                         </div>
 
                         <div className="flex items-center space-x-6 mb-6">
                             <img
-                                src={`(\\/api/lsa/therapists/${selectedTherapist.id}/document/therapist_image?action=view`}
+                                src={getApiUrl(`/api/lsa/therapists/${selectedTherapist.id}/document/therapist_image?action=view`)}
                                 alt={selectedTherapist.name}
                                 className="w-24 h-24 rounded-full object-cover bg-gray-200 border-2 border-[#0A1428]"
                                 onError={(e) => {
@@ -1573,7 +1574,7 @@ const ViewTherapists = () => {
                                 onClick={() => setShowResubmitModal(false)}
                                 className="text-gray-400 hover:text-gray-600 text-2xl"
                             >
-                                ×
+                                ï¿½
                             </button>
                         </div>
 
@@ -2233,7 +2234,7 @@ const AdminSPAContent = () => {
                                 <span className="text-sm font-medium">
                                     Status: {spaStatus.status.charAt(0).toUpperCase() + spaStatus.status.slice(1)}
                                 </span>
-                                <span className="mx-2">•</span>
+                                <span className="mx-2">ï¿½</span>
                                 <span className="text-sm">
                                     {spaStatus.statusMessage}
                                 </span>

@@ -370,7 +370,7 @@ const ResignTerminate = () => {
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="flex items-center space-x-3">
                                         <img
-                                            src={`(\\/api/lsa/therapists/${therapist.id}/document/therapist_image?action=view`}
+                                            src={getApiUrl(`/api/lsa/therapists/${therapist.id}/document/therapist_image?action=view`)}
                                             alt={therapist.name}
                                             className="w-12 h-12 rounded-full object-cover border-2 border-[#0A1428]"
                                             onError={(e) => {

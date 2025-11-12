@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { KeyIcon, EyeIcon, EyeSlashIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
+import { getApiUrl } from '../../utils/apiConfig';
 import Swal from 'sweetalert2';
 
 const AccountSettings = () => {
@@ -97,7 +98,7 @@ const AccountSettings = () => {
             }
 
             const response = await axios.put(
-                '(\\/api/lsa/account/change-credentials',
+                getApiUrl('/api/lsa/account/change-credentials'),
                 {
                     admin_id: userData.id,
                     current_password: formData.current_password,

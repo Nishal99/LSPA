@@ -68,15 +68,24 @@ db.getConnection()
   });
 
 // Middleware
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:3001',
+  'https://lankaspaassociation.lk',
+  'https://www.lankaspaassociation.lk',
+  'https://api.lankaspaassociation.lk'
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:3001',
-    'https://lankaspaassociation.lk',
-    'https://www.lankaspaassociation.lk',
-    'https://api.lankaspaassociation.lk'
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (e.g., mobile apps, curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS policy: Origin not allowed'));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'admin-id'],

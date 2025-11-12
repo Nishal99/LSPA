@@ -13,6 +13,7 @@ import {
 } from '@heroicons/react/24/outline';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { getApiUrl } from '../../utils/apiConfig';
 
 const AccountManagement = () => {
     const [accounts, setAccounts] = useState([]);
@@ -38,7 +39,7 @@ const AccountManagement = () => {
         phone: ''
     });
 
-    const API_BASE = 'http://localhost:3001/api';
+    const API_BASE = '(\\/api';
 
     // Get admin ID from localStorage (assuming it's stored during login)
     const getAdminId = () => {
@@ -634,3 +635,4 @@ const AccountManagement = () => {
 };
 
 export default AccountManagement;
+

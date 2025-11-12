@@ -17,7 +17,7 @@ const AddGallery = () => {
   const fetchUploadedImages = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3001/api/gallery');
+      const response = await axios.get('(\\/api/gallery');
       setUploadedImages(response.data.images || []);
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -57,7 +57,7 @@ const AddGallery = () => {
         formData.append('galleryImages', image);
       });
 
-      const response = await axios.post('http://localhost:3001/api/backend/gallery', formData, {
+      const response = await axios.post('(\\/api/backend/gallery', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -93,7 +93,7 @@ const AddGallery = () => {
     }
 
     try {
-      const response = await axios.delete(`http://localhost:3001/api/gallery/${filename}`);
+      const response = await axios.delete(`(\\/api/gallery/${filename}`);
 
       if (response.data.success) {
         setMessage({ text: 'Image deleted successfully!', type: 'success' });
@@ -247,7 +247,7 @@ const AddGallery = () => {
                   {uploadedImages.map((image, index) => (
                     <div key={index} className="relative group bg-gray-100 rounded-lg overflow-hidden">
                       <img
-                        src={`http://localhost:3001/gallery/${image}`}
+                        src={`(\\/gallery/${image}`}
                         alt={`Gallery ${index + 1}`}
                         className="w-full h-48 object-cover"
                         onError={(e) => {

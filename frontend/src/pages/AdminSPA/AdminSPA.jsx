@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import io from 'socket.io-client';
@@ -173,7 +173,7 @@ const AddTherapist = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3001/api/admin-spa-new/check-nic', {
+            const response = await fetch('(\\/api/admin-spa-new/check-nic', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -223,7 +223,7 @@ const AddTherapist = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3001/api/admin-spa-new/check-nic', {
+            const response = await fetch('(\\/api/admin-spa-new/check-nic', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -693,7 +693,7 @@ const AddTherapist = () => {
                                                             />
                                                             {/* Pink face guide overlay like WhatsApp */}
                                                             <div className="absolute inset-6 border-2 border-pink-400 rounded-lg opacity-70 pointer-events-none"></div>
-                                                            <div className="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">📹 Live Camera</div>
+                                                            <div className="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">?? Live Camera</div>
                                                         </>
                                                     )}
                                                 </div>
@@ -754,7 +754,7 @@ const AddTherapist = () => {
                                                 className="w-16 h-16 bg-pink-500 text-white rounded-full flex items-center justify-center hover:bg-pink-600 transition-all duration-200 shadow-2xl hover:shadow-pink-500/25 transform hover:scale-110 relative disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                                 aria-label="Capture photo from live preview"
                                             >
-                                                <span className="text-2xl">📸</span>
+                                                <span className="text-2xl">??</span>
                                             </button>
 
                                             {/* Cancel Button */}
@@ -774,7 +774,7 @@ const AddTherapist = () => {
                                     {/* File Info */}
                                     {attachments.imageFile && !showCamera && (
                                         <div className="text-center bg-green-50 rounded-lg p-3 border border-green-200">
-                                            <p className="text-sm text-green-700 font-semibold">✓ Profile Image Ready</p>
+                                            <p className="text-sm text-green-700 font-semibold">? Profile Image Ready</p>
                                             <p className="text-xs text-green-600">{attachments.imageFile.name}</p>
                                         </div>
                                     )}
@@ -782,7 +782,7 @@ const AddTherapist = () => {
                                     {/* Instructions */}
                                     <div className="text-center mt-4">
                                         <p className="text-xs text-gray-500">
-                                            Upload from gallery or capture with live camera • PNG, JPG only • Max 5MB
+                                            Upload from gallery or capture with live camera � PNG, JPG only � Max 5MB
                                         </p>
                                     </div>
 
@@ -802,8 +802,8 @@ const AddTherapist = () => {
                                         className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#0A1428] outline-none ${errors.nicFile ? 'border-red-500 bg-red-50' : 'border-gray-300'
                                             }`}
                                     />
-                                    {errors.nicFile && <p className="text-sm text-red-500">✗ {errors.nicFile}</p>}
-                                    {attachments.nicFile && !errors.nicFile && <p className="text-sm text-green-600">✓ {attachments.nicFile.name}</p>}
+                                    {errors.nicFile && <p className="text-sm text-red-500">? {errors.nicFile}</p>}
+                                    {attachments.nicFile && !errors.nicFile && <p className="text-sm text-green-600">? {attachments.nicFile.name}</p>}
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-700">Medical Certificate (PDF, PNG, JPG) *</label>
@@ -814,8 +814,8 @@ const AddTherapist = () => {
                                         className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#0A1428] outline-none ${errors.medicalFile ? 'border-red-500 bg-red-50' : 'border-gray-300'
                                             }`}
                                     />
-                                    {errors.medicalFile && <p className="text-sm text-red-500">✗ {errors.medicalFile}</p>}
-                                    {attachments.medicalFile && !errors.medicalFile && <p className="text-sm text-green-600">✓ {attachments.medicalFile.name}</p>}
+                                    {errors.medicalFile && <p className="text-sm text-red-500">? {errors.medicalFile}</p>}
+                                    {attachments.medicalFile && !errors.medicalFile && <p className="text-sm text-green-600">? {attachments.medicalFile.name}</p>}
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-700">Spa Center Certificate (PDF, PNG, JPG) *</label>
@@ -826,15 +826,15 @@ const AddTherapist = () => {
                                         className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#0A1428] outline-none ${errors.certificateFile ? 'border-red-500 bg-red-50' : 'border-gray-300'
                                             }`}
                                     />
-                                    {errors.certificateFile && <p className="text-sm text-red-500">✗ {errors.certificateFile}</p>}
-                                    {attachments.certificateFile && !errors.certificateFile && <p className="text-sm text-green-600">✓ {attachments.certificateFile.name}</p>}
+                                    {errors.certificateFile && <p className="text-sm text-red-500">? {errors.certificateFile}</p>}
+                                    {attachments.certificateFile && !errors.certificateFile && <p className="text-sm text-green-600">? {attachments.certificateFile.name}</p>}
                                 </div>
                             </div>
 
                             {/* Profile Image Error */}
                             {errors.imageFile && (
                                 <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-4">
-                                    <p className="text-sm text-red-600">✗ {errors.imageFile}</p>
+                                    <p className="text-sm text-red-600">? {errors.imageFile}</p>
                                 </div>
                             )}
                         </div>
@@ -871,16 +871,16 @@ const AddTherapist = () => {
                                             <h5 className="font-medium text-gray-700 mb-2">Attachments:</h5>
                                             <div className="grid grid-cols-2 gap-2 text-sm">
                                                 <div className={attachments.nicFile ? 'text-green-600' : 'text-red-500'}>
-                                                    NIC: {attachments.nicFile ? '✓ Uploaded' : '✗ Not uploaded'}
+                                                    NIC: {attachments.nicFile ? '? Uploaded' : '? Not uploaded'}
                                                 </div>
                                                 <div className={attachments.medicalFile ? 'text-green-600' : 'text-red-500'}>
-                                                    Medical: {attachments.medicalFile ? '✓ Uploaded' : '✗ Not uploaded'}
+                                                    Medical: {attachments.medicalFile ? '? Uploaded' : '? Not uploaded'}
                                                 </div>
                                                 <div className={attachments.certificateFile ? 'text-green-600' : 'text-red-500'}>
-                                                    Certificate: {attachments.certificateFile ? '✓ Uploaded' : '✗ Not uploaded'}
+                                                    Certificate: {attachments.certificateFile ? '? Uploaded' : '? Not uploaded'}
                                                 </div>
                                                 <div className={attachments.imageFile ? 'text-green-600' : 'text-red-500'}>
-                                                    Image: {attachments.imageFile ? '✓ Uploaded' : '✗ Not uploaded'}
+                                                    Image: {attachments.imageFile ? '? Uploaded' : '? Not uploaded'}
                                                 </div>
                                             </div>
                                         </div>
@@ -1062,20 +1062,20 @@ const ViewTherapists = () => {
     // Initialize spa_id when component mounts
     useEffect(() => {
         const userData = localStorage.getItem('user');
-        console.log('📱 Raw user data from localStorage:', userData);
+        console.log('?? Raw user data from localStorage:', userData);
 
         if (userData) {
             try {
                 const user = JSON.parse(userData);
-                console.log('🎯 Parsed user object:', user);
-                console.log('🎯 Setting spa_id for user:', user.username, 'spa_id:', user.spa_id);
+                console.log('?? Parsed user object:', user);
+                console.log('?? Setting spa_id for user:', user.username, 'spa_id:', user.spa_id);
                 setSpaId(user.spa_id ? String(user.spa_id) : null);
             } catch (error) {
                 console.error('Error parsing user data:', error);
                 setSpaId(null);
             }
         } else {
-            console.error('❌ No user data found in localStorage');
+            console.error('? No user data found in localStorage');
         }
     }, []);
 
@@ -1084,7 +1084,7 @@ const ViewTherapists = () => {
         const token = localStorage.getItem('token');
 
         // Enhanced token debugging
-        console.log('🔍 Token debugging:', {
+        console.log('?? Token debugging:', {
             tokenExists: !!token,
             tokenValue: token,
             tokenType: typeof token,
@@ -1096,8 +1096,8 @@ const ViewTherapists = () => {
         });
 
         if (!token || token === 'null' || token === 'undefined') {
-            console.error('🔑 Invalid token for therapists request:', token);
-            console.log('❌ No valid token found, redirecting to login');
+            console.error('?? Invalid token for therapists request:', token);
+            console.log('? No valid token found, redirecting to login');
             setError('Authentication required. Please log in again.');
             setTherapists([]);
             // Redirect to login
@@ -1106,7 +1106,7 @@ const ViewTherapists = () => {
         }
 
         if (!spaId) {
-            console.error('🏢 No spa_id available for therapists request');
+            console.error('?? No spa_id available for therapists request');
             setError('Spa information not available. Please refresh the page.');
             setTherapists([]);
             return;
@@ -1115,8 +1115,8 @@ const ViewTherapists = () => {
         setLoading(true);
         setError(null);
         try {
-            console.log(`🔍 Fetching therapists for SPA ${spaId} with status: ${status}`);
-            console.log(`🔑 Frontend token check:`, {
+            console.log(`?? Fetching therapists for SPA ${spaId} with status: ${status}`);
+            console.log(`?? Frontend token check:`, {
                 tokenExists: !!token,
                 tokenLength: token?.length,
                 tokenStart: token?.substring(0, 15) + '...'
@@ -1130,7 +1130,7 @@ const ViewTherapists = () => {
                 }
             });
 
-            console.log(`📡 Response status: ${response.status} ${response.statusText}`);
+            console.log(`?? Response status: ${response.status} ${response.statusText}`);
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -1140,7 +1140,7 @@ const ViewTherapists = () => {
 
             if (data.success) {
                 setTherapists(data.therapists || []);
-                console.log(`📋 Loaded ${data.therapists?.length || 0} therapists for SPA ${spaId}`);
+                console.log(`?? Loaded ${data.therapists?.length || 0} therapists for SPA ${spaId}`);
             } else {
                 setError('Failed to fetch therapists');
                 setTherapists([]);
@@ -1158,7 +1158,7 @@ const ViewTherapists = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token && token !== 'null' && token !== 'undefined' && spaId) {
-            console.log(`🔄 Loading therapists for tab: ${activeTab}, spa: ${spaId}`);
+            console.log(`?? Loading therapists for tab: ${activeTab}, spa: ${spaId}`);
 
             // Add small delay to prevent race conditions
             const timeoutId = setTimeout(() => {
@@ -1167,10 +1167,10 @@ const ViewTherapists = () => {
 
             return () => clearTimeout(timeoutId);
         } else {
-            console.log(`⚠️ Skipping therapist load - token: ${!!token}, spaId: ${spaId}`);
+            console.log(`?? Skipping therapist load - token: ${!!token}, spaId: ${spaId}`);
             // If there's no valid token, redirect to login
             if (!token || token === 'null' || token === 'undefined') {
-                console.log('❌ No valid token in useEffect, redirecting to login');
+                console.log('? No valid token in useEffect, redirecting to login');
                 window.location.href = '/login';
             }
         }
@@ -1430,7 +1430,7 @@ const ViewTherapists = () => {
                         <div key={therapist.id} className="bg-gray-50 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
                             <div className="flex items-center space-x-3 mb-4">
                                 <img
-                                    src={`http://localhost:3001/api/lsa/therapists/${therapist.id}/document/therapist_image?action=view`}
+                                    src={`(\\/api/lsa/therapists/${therapist.id}/document/therapist_image?action=view`}
                                     alt={therapist.name}
                                     className="w-16 h-16 rounded-full object-cover bg-gray-200 border-2 border-[#0A1428]"
                                     onError={(e) => {
@@ -1496,13 +1496,13 @@ const ViewTherapists = () => {
                                 onClick={() => setShowModal(false)}
                                 className="text-gray-400 hover:text-gray-600 text-2xl"
                             >
-                                ×
+                                �
                             </button>
                         </div>
 
                         <div className="flex items-center space-x-6 mb-6">
                             <img
-                                src={`http://localhost:3001/api/lsa/therapists/${selectedTherapist.id}/document/therapist_image?action=view`}
+                                src={`(\\/api/lsa/therapists/${selectedTherapist.id}/document/therapist_image?action=view`}
                                 alt={selectedTherapist.name}
                                 className="w-24 h-24 rounded-full object-cover bg-gray-200 border-2 border-[#0A1428]"
                                 onError={(e) => {
@@ -1573,7 +1573,7 @@ const ViewTherapists = () => {
                                 onClick={() => setShowResubmitModal(false)}
                                 className="text-gray-400 hover:text-gray-600 text-2xl"
                             >
-                                ×
+                                �
                             </button>
                         </div>
 
@@ -1690,7 +1690,7 @@ const ViewTherapists = () => {
                                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A1428] focus:border-transparent"
                                     />
                                     {resubmitFiles.nic_attachment && (
-                                        <p className="text-sm text-green-600 mt-1">✓ {resubmitFiles.nic_attachment.name}</p>
+                                        <p className="text-sm text-green-600 mt-1">? {resubmitFiles.nic_attachment.name}</p>
                                     )}
                                 </div>
 
@@ -1703,7 +1703,7 @@ const ViewTherapists = () => {
                                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A1428] focus:border-transparent"
                                     />
                                     {resubmitFiles.medical_certificate && (
-                                        <p className="text-sm text-green-600 mt-1">✓ {resubmitFiles.medical_certificate.name}</p>
+                                        <p className="text-sm text-green-600 mt-1">? {resubmitFiles.medical_certificate.name}</p>
                                     )}
                                 </div>
 
@@ -1716,7 +1716,7 @@ const ViewTherapists = () => {
                                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A1428] focus:border-transparent"
                                     />
                                     {resubmitFiles.spa_certificate && (
-                                        <p className="text-sm text-green-600 mt-1">✓ {resubmitFiles.spa_certificate.name}</p>
+                                        <p className="text-sm text-green-600 mt-1">? {resubmitFiles.spa_certificate.name}</p>
                                     )}
                                 </div>
 
@@ -1729,7 +1729,7 @@ const ViewTherapists = () => {
                                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A1428] focus:border-transparent"
                                     />
                                     {resubmitFiles.therapist_image && (
-                                        <p className="text-sm text-green-600 mt-1">✓ {resubmitFiles.therapist_image.name}</p>
+                                        <p className="text-sm text-green-600 mt-1">? {resubmitFiles.therapist_image.name}</p>
                                     )}
                                 </div>
                             </div>
@@ -1776,7 +1776,7 @@ const AdminSPAContent = () => {
     // Initialize Socket.io connection
     useEffect(() => {
         const spaId = localStorage.getItem('spaId') || '1'; // Get from localStorage or default
-        const newSocket = io('http://localhost:3001');
+        const newSocket = io('(\\');
 
         newSocket.emit('join_spa', spaId);
 
@@ -1888,7 +1888,7 @@ const AdminSPAContent = () => {
             return (
                 <div className="flex items-center justify-center h-full">
                     <div className="text-center p-8">
-                        <div className="text-6xl mb-4">🚫</div>
+                        <div className="text-6xl mb-4">??</div>
                         <h2 className="text-2xl font-bold text-gray-700 mb-2">Access Restricted</h2>
                         <p className="text-gray-500 mb-4">
                             You don't have permission to access this section.
@@ -1998,7 +1998,7 @@ const AdminSPAContent = () => {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
                 <div className="text-center">
-                    <div className="text-6xl mb-4">⚠️</div>
+                    <div className="text-6xl mb-4">??</div>
                     <h2 className="text-2xl font-bold text-gray-700 mb-2">Error Loading Dashboard</h2>
                     <p className="text-gray-500 mb-4">{spaStatus.error}</p>
                     <button
@@ -2233,7 +2233,7 @@ const AdminSPAContent = () => {
                                 <span className="text-sm font-medium">
                                     Status: {spaStatus.status.charAt(0).toUpperCase() + spaStatus.status.slice(1)}
                                 </span>
-                                <span className="mx-2">•</span>
+                                <span className="mx-2">�</span>
                                 <span className="text-sm">
                                     {spaStatus.statusMessage}
                                 </span>
@@ -2277,3 +2277,4 @@ const AdminSPA = () => {
 };
 
 export default AdminSPA;
+

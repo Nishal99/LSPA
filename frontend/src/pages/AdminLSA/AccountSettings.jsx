@@ -97,7 +97,7 @@ const AccountSettings = () => {
             }
 
             const response = await axios.put(
-                'http://localhost:3001/api/lsa/account/change-credentials',
+                '(\\/api/lsa/account/change-credentials',
                 {
                     admin_id: userData.id,
                     current_password: formData.current_password,
@@ -306,3 +306,4 @@ const AccountSettings = () => {
 };
 
 export default AccountSettings;
+

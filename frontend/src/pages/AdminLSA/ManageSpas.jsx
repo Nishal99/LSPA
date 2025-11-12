@@ -99,7 +99,7 @@ const ManageSpas = () => {
     const fetchSpas = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:3001/api/lsa/spas', {
+            const response = await axios.get('(\\/api/lsa/spas', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
 
@@ -330,16 +330,16 @@ const ManageSpas = () => {
 
             switch (action) {
                 case 'approve':
-                    endpoint = `http://localhost:3001/api/admin-lsa-enhanced/spas/${spaId}/approve`;
+                    endpoint = `(\\/api/admin-lsa-enhanced/spas/${spaId}/approve`;
                     successMessage = 'Spa approved successfully';
                     break;
                 case 'reject':
-                    endpoint = `http://localhost:3001/api/admin-lsa-enhanced/spas/${spaId}/reject`;
+                    endpoint = `(\\/api/admin-lsa-enhanced/spas/${spaId}/reject`;
                     successMessage = 'Spa rejected successfully';
                     payload = { reason };
                     break;
                 case 'blacklist':
-                    endpoint = `http://localhost:3001/api/admin-lsa-enhanced/spas/${spaId}/blacklist`;
+                    endpoint = `(\\/api/admin-lsa-enhanced/spas/${spaId}/blacklist`;
                     successMessage = 'Spa blacklisted successfully';
                     payload = { reason };
                     break;
@@ -443,7 +443,7 @@ const ManageSpas = () => {
             setLoading(true);
 
             // Fetch detailed spa information with payment details
-            const response = await axios.get(`http://localhost:3001/api/lsa/spas/${spa.spa_id}/detailed`, {
+            const response = await axios.get(`(\\/api/lsa/spas/${spa.spa_id}/detailed`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
 
@@ -484,14 +484,14 @@ const ManageSpas = () => {
                 const documentPath = documentMap[documentType];
                 if (documentPath) {
                     // Construct direct URL to the file
-                    const fileUrl = `http://localhost:3001${documentPath}`;
+                    const fileUrl = `(\\${documentPath}`;
                     window.open(fileUrl, '_blank');
                     return;
                 }
             }
 
             // Fallback to API endpoint
-            const url = `http://localhost:3001/api/lsa/spas/${spaId}/documents/${documentType}?action=view`;
+            const url = `(\\/api/lsa/spas/${spaId}/documents/${documentType}?action=view`;
             window.open(url, '_blank');
         } catch (error) {
             console.error('Error viewing document:', error);
@@ -521,7 +521,7 @@ const ManageSpas = () => {
                 const documentPath = documentMap[documentType];
                 if (documentPath) {
                     // Create download link
-                    const fileUrl = `http://localhost:3001${documentPath}`;
+                    const fileUrl = `(\\${documentPath}`;
                     const link = document.createElement('a');
                     link.href = fileUrl;
                     link.download = documentPath.split('/').pop(); // Get filename from path
@@ -533,7 +533,7 @@ const ManageSpas = () => {
             }
 
             // Fallback to API endpoint
-            const url = `http://localhost:3001/api/lsa/spas/${spaId}/documents/${documentType}?action=download`;
+            const url = `(\\/api/lsa/spas/${spaId}/documents/${documentType}?action=download`;
             const link = document.createElement('a');
             link.href = url;
             link.download = '';
@@ -554,7 +554,7 @@ const ManageSpas = () => {
         try {
             if (slipPath) {
                 // Create full URL for payment slip
-                const fileUrl = slipPath.startsWith('http') ? slipPath : `http://localhost:3001${slipPath.startsWith('/') ? slipPath : '/' + slipPath}`;
+                const fileUrl = slipPath.startsWith('http') ? slipPath : `(\\${slipPath.startsWith('/') ? slipPath : '/' + slipPath}`;
                 window.open(fileUrl, '_blank');
             } else {
                 Swal.fire({
@@ -577,7 +577,7 @@ const ManageSpas = () => {
         try {
             if (slipPath) {
                 // Create download link
-                const fileUrl = slipPath.startsWith('http') ? slipPath : `http://localhost:3001${slipPath.startsWith('/') ? slipPath : '/' + slipPath}`;
+                const fileUrl = slipPath.startsWith('http') ? slipPath : `(\\${slipPath.startsWith('/') ? slipPath : '/' + slipPath}`;
                 const link = document.createElement('a');
                 link.href = fileUrl;
                 link.download = slipName || slipPath.split('/').pop(); // Use slip name or extract from path

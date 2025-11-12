@@ -81,7 +81,7 @@ export const SpaContextProvider = ({ children }) => {
                 }
 
                 // Fetch spa information from backend
-                const response = await fetch(`http://localhost:3001/api/spa/profile/${user.spa_id}`, {
+                const response = await fetch(`(\\/api/spa/profile/${user.spa_id}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -133,3 +133,4 @@ export const SpaContextProvider = ({ children }) => {
 };
 
 export { SpaContext };
+

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiGrid, FiFileText, FiClock, FiRefreshCw } from "react-icons/fi";
 import axios from 'axios';
+import { getApiUrl } from '../../utils/apiConfig';
 
 const Dashboard = () => {
   const [dashboardStats, setDashboardStats] = useState({
@@ -28,8 +29,8 @@ const Dashboard = () => {
     try {
       setLoading(true);
 
-      const spasResponse = await axios.get('http://localhost:3001/api/lsa/dashboard/spas-count');
-      const therapistsResponse = await axios.get('http://localhost:3001/api/lsa/dashboard/therapists-count');
+      const spasResponse = await axios.get(getApiUrl('/api/lsa/dashboard/spas-count'));
+      const therapistsResponse = await axios.get(getApiUrl('/api/lsa/dashboard/therapists-count'));
 
       if (spasResponse.data.success && therapistsResponse.data.success) {
         setDashboardStats({
@@ -54,7 +55,7 @@ const Dashboard = () => {
 
   const fetchRecentActivity = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/lsa/dashboard/recent-activity');
+      const response = await axios.get(getApiUrl('/api/lsa/dashboard/recent-activity'));
       if (response.data.success) {
         setRecentActivity(response.data.data || []);
       }

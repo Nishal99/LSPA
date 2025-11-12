@@ -67,11 +67,11 @@ const fixBankSlipUrl = (bankSlipPath) => {
   // Ensure it starts with the correct base URL
   if (!bankSlipUrl.startsWith('http')) {
     if (bankSlipUrl.startsWith('/uploads/')) {
-      bankSlipUrl = `http://localhost:3001${bankSlipUrl}`;
+      bankSlipUrl = `(\\${bankSlipUrl}`;
     } else if (bankSlipUrl.startsWith('uploads/')) {
-      bankSlipUrl = `http://localhost:3001/${bankSlipUrl}`;
+      bankSlipUrl = `(\\/${bankSlipUrl}`;
     } else {
-      bankSlipUrl = `http://localhost:3001/uploads/payment-slips/${bankSlipUrl}`;
+      bankSlipUrl = `(\\/uploads/payment-slips/${bankSlipUrl}`;
     }
   }
 
@@ -105,7 +105,7 @@ const AdminLSA = () => {
 
   // Initialize Socket.io connection for LSA
   useEffect(() => {
-    const newSocket = io('http://localhost:3001');
+    const newSocket = io('(\\');
 
     newSocket.emit('join_lsa');
 
@@ -232,7 +232,7 @@ const AdminLSA = () => {
   });
 
   // API base URL
-  const API_BASE = 'http://localhost:3001/api';
+  const API_BASE = '(\\/api';
 
   // Simple headers without authentication
   const getHeaders = () => {

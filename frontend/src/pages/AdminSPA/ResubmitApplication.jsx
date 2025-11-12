@@ -80,7 +80,7 @@ const ResubmitApplication = () => {
             console.log(`🔍 Fetching SPA profile for spa_id: ${spaId}`);
 
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3001/api/spa/profile/${spaId}`, {
+            const response = await fetch(`(\\/api/spa/profile/${spaId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -247,7 +247,7 @@ const ResubmitApplication = () => {
             });
 
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3001/api/spa/resubmit/${rejectedSpa.id}`, {
+            const response = await fetch(`(\\/api/spa/resubmit/${rejectedSpa.id}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`

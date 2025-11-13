@@ -58,11 +58,7 @@ const AddGallery = () => {
         formData.append('galleryImages', image);
       });
 
-      const response = await axios.post(getApiUrl('/api/backend/gallery'), formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(getApiUrl('/api/backend/gallery'), formData);
 
       if (response.data.success) {
         setMessage({ text: 'Images uploaded successfully!', type: 'success' });
@@ -81,8 +77,8 @@ const AddGallery = () => {
         setMessage({ text: response.data.message || 'Upload failed', type: 'error' });
       }
     } catch (error) {
-      console.error('Upload error:', error);
-      setMessage({ text: 'Error uploading images. Please try again.', type: 'error' });
+      console.error('Upload error:', error.response?.data || error.message);
+      setMessage({ text: error.response?.data?.message || 'Error uploading images. Please try again.', type: 'error' });
     } finally {
       setUploading(false);
     }

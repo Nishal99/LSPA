@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { getApiUrl } from '../../utils/apiConfig';
 
 const ThirdPartyLogin = () => {
     const [accounts, setAccounts] = useState([]);
@@ -25,7 +26,7 @@ const ThirdPartyLogin = () => {
     const fetchAccounts = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('/api/admin-lsa/third-party/accounts', {
+            const response = await axios.get(getApiUrl('/api/admin-lsa/third-party/accounts'), {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setAccounts(response.data.accounts || []);
@@ -78,7 +79,7 @@ const ThirdPartyLogin = () => {
         setLoading(true);
         try {
             const password = generatePassword();
-            await axios.post('/api/admin-lsa/third-party/create',
+            await axios.post(getApiUrl('/api/admin-lsa/third-party/create'),
                 { username, password },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             );
@@ -136,7 +137,7 @@ const ThirdPartyLogin = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.delete(`/api/admin-lsa/third-party/${id}`, {
+                await axios.delete(getApiUrl(`/api/admin-lsa/third-party/${id}`), {
                     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 });
                 fetchAccounts();

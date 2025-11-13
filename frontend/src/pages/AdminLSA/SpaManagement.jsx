@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { getApiUrl } from '../../utils/apiConfig';
 
 const SpaManagement = () => {
     const [activeTab, setActiveTab] = useState('pending');
@@ -27,7 +28,7 @@ const SpaManagement = () => {
     const fetchSpas = async (status) => {
         setLoading(true);
         try {
-            const response = await axios.get(`/api/admin-lsa/spas?status=${status}`, {
+            const response = await axios.get(getApiUrl(`/api/admin-lsa/spas?status=${status}`), {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setSpas(response.data.spas || []);
@@ -88,7 +89,7 @@ const SpaManagement = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.post(`/api/admin-lsa/spa/approve/${id}`, {}, {
+                await axios.post(getApiUrl(`/api/admin-lsa/spa/approve/${id}`), {}, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 });
                 fetchSpas(activeTab);
@@ -108,7 +109,7 @@ const SpaManagement = () => {
         }
 
         try {
-            await axios.post(`/api/admin-lsa/spa/reject/${id}`, { reason }, {
+            await axios.post(getApiUrl(`/api/admin-lsa/spa/reject/${id}`), { reason }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             fetchSpas(activeTab);
@@ -140,7 +141,7 @@ const SpaManagement = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.post(`/api/admin-lsa/spa/blacklist/${id}`, { reason }, {
+                await axios.post(getApiUrl(`/api/admin-lsa/spa/blacklist/${id}`), { reason }, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 });
                 fetchSpas(activeTab);

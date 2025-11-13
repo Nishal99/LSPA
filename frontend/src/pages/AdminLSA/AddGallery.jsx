@@ -10,7 +10,7 @@ const AddGallery = () => {
   const [message, setMessage] = useState({ text: '', type: '' });
   const [activeTab, setActiveTab] = useState('upload'); // 'upload' or 'manage'
 
-  // Fetch uploaded images on component mount
+  // Fetch uploaded images
   useEffect(() => {
     fetchUploadedImages();
   }, []);
@@ -21,7 +21,7 @@ const AddGallery = () => {
       const response = await axios.get(getApiUrl('/api/gallery'));
       setUploadedImages(response.data.images || []);
     } catch (error) {
-      console.error('Error fetching images:', error);
+      console.error('Error fetching gallery:', error);
       setMessage({ text: 'Error loading gallery images', type: 'error' });
     } finally {
       setLoading(false);
@@ -31,9 +31,7 @@ const AddGallery = () => {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     const validFiles = files.filter(file =>
-      file.type === 'image/jpeg' ||
-      file.type === 'image/png' ||
-      file.type === 'image/webp'
+      ['image/jpeg', 'image/png', 'image/webp'].includes(file.type)
     );
 
     if (validFiles.length !== files.length) {
@@ -44,7 +42,7 @@ const AddGallery = () => {
   };
 
   const handleUpload = async () => {
-    if (images.length === 0) {
+    if (!images.length) {
       setMessage({ text: 'Please select at least one image', type: 'error' });
       return;
     }
@@ -54,68 +52,47 @@ const AddGallery = () => {
 
     try {
       const formData = new FormData();
-      images.forEach(image => {
-        formData.append('galleryImages', image);
+      images.forEach(image => formData.append('galleryImages', image));
+
+      const response = await axios.post(getApiUrl('/api/backend/gallery'), formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-
-      console.log('Uploading to:', getApiUrl('/api/backend/gallery'));
-      console.log('Files count:', images.length);
-
-      const response = await axios.post(getApiUrl('/api/backend/gallery'), formData);
-
-      console.log('Upload response:', response.data);
 
       if (response.data.success) {
         setMessage({ text: 'Images uploaded successfully!', type: 'success' });
         setImages([]);
         document.getElementById('gallery-upload').value = '';
 
-        // Refresh the gallery after upload
         fetchUploadedImages();
-        // Switch to manage tab after successful upload
         setActiveTab('manage');
 
-        setTimeout(() => {
-          setMessage({ text: '', type: '' });
-        }, 5000);
+        setTimeout(() => setMessage({ text: '', type: '' }), 5000);
       } else {
         setMessage({ text: response.data.message || 'Upload failed', type: 'error' });
       }
     } catch (error) {
-      console.error('Upload error details:', {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-        headers: error.response?.headers,
-      });
-      setMessage({ text: error.response?.data?.message || 'Error uploading images. Please try again.', type: 'error' });
+      console.error('Upload error:', error.response?.data || error.message);
+      setMessage({ text: error.response?.data?.message || 'Error uploading images', type: 'error' });
     } finally {
       setUploading(false);
     }
   };
 
   const deleteImage = async (filename) => {
-    if (!window.confirm('Are you sure you want to delete this image?')) {
-      return;
-    }
+    if (!window.confirm('Are you sure you want to delete this image?')) return;
 
     try {
       const response = await axios.delete(getApiUrl(`/api/gallery/${filename}`));
-
       if (response.data.success) {
         setMessage({ text: 'Image deleted successfully!', type: 'success' });
-        // Refresh the gallery
         fetchUploadedImages();
-
-        setTimeout(() => {
-          setMessage({ text: '', type: '' });
-        }, 3000);
+        setTimeout(() => setMessage({ text: '', type: '' }), 3000);
       } else {
         setMessage({ text: response.data.message || 'Delete failed', type: 'error' });
       }
     } catch (error) {
-      console.error('Delete error:', error);
-      setMessage({ text: 'Error deleting image. Please try again.', type: 'error' });
+      console.error('Delete error:', error.response?.data || error.message);
+      setMessage({ text: 'Error deleting image', type: 'error' });
     }
   };
 
@@ -130,23 +107,20 @@ const AddGallery = () => {
       <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md p-6">
         <h1 className="text-2xl font-bold text-[#0A1428] mb-6">Gallery Management</h1>
 
-        {/* Tab Navigation */}
+        {/* Tabs */}
         <div className="flex border-b border-gray-200 mb-6">
-          <button
-            onClick={() => setActiveTab('upload')}
-            className={`px-6 py-3 font-medium ${activeTab === 'upload' ? 'border-b-2 border-[#0A1428] text-[#0A1428]' : 'text-gray-500'}`}
-          >
-            Upload Images
-          </button>
-          <button
-            onClick={() => setActiveTab('manage')}
-            className={`px-6 py-3 font-medium ${activeTab === 'manage' ? 'border-b-2 border-[#0A1428] text-[#0A1428]' : 'text-gray-500'}`}
-          >
-            Manage Gallery ({uploadedImages.length})
-          </button>
+          {['upload', 'manage'].map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-3 font-medium ${activeTab === tab ? 'border-b-2 border-[#0A1428] text-[#0A1428]' : 'text-gray-500'}`}
+            >
+              {tab === 'upload' ? 'Upload Images' : `Manage Gallery (${uploadedImages.length})`}
+            </button>
+          ))}
         </div>
 
-        {/* Message Display */}
+        {/* Messages */}
         {message.text && (
           <div className={`p-4 rounded-lg mb-6 ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
             {message.text}
@@ -156,7 +130,6 @@ const AddGallery = () => {
         {/* Upload Tab */}
         {activeTab === 'upload' && (
           <>
-            {/* Upload Area */}
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center mb-6">
               <input
                 type="file"
@@ -175,25 +148,18 @@ const AddGallery = () => {
               </label>
             </div>
 
-            {/* Selected Images Preview */}
             {images.length > 0 && (
               <div className="mb-6">
                 <h2 className="text-lg font-semibold text-[#0A1428] mb-4">Selected Images ({images.length})</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative group">
-                      <img
-                        src={URL.createObjectURL(image)}
-                        alt={`Preview ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg"
-                      />
+                  {images.map((image, idx) => (
+                    <div key={idx} className="relative group">
+                      <img src={URL.createObjectURL(image)} alt={`Preview ${idx+1}`} className="w-full h-32 object-cover rounded-lg" />
                       <button
-                        onClick={() => removeImage(index)}
+                        onClick={() => removeImage(idx)}
                         className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        ✕
                       </button>
                       <p className="text-xs text-gray-500 truncate mt-1">{image.name}</p>
                     </div>
@@ -202,29 +168,13 @@ const AddGallery = () => {
               </div>
             )}
 
-            {/* Upload Button */}
             <div className="flex justify-end">
               <button
                 onClick={handleUpload}
-                disabled={uploading || images.length === 0}
-                className={`px-6 py-3 rounded-lg font-medium flex items-center ${uploading || images.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0A1428] hover:bg-opacity-90 text-white'}`}
+                disabled={uploading || !images.length}
+                className={`px-6 py-3 rounded-lg font-medium flex items-center ${uploading || !images.length ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0A1428] hover:bg-opacity-90 text-white'}`}
               >
-                {uploading ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Uploading...
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                    Upload Images
-                  </>
-                )}
+                {uploading ? 'Uploading...' : 'Upload Images'}
               </button>
             </div>
           </>
@@ -237,46 +187,31 @@ const AddGallery = () => {
               <div className="flex justify-center items-center h-64">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0A1428]"></div>
               </div>
-            ) : uploadedImages.length === 0 ? (
-              <div className="text-center py-12">
-                <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <p className="text-gray-500">No images in gallery yet. Upload some images to get started.</p>
-              </div>
+            ) : !uploadedImages.length ? (
+              <p className="text-center text-gray-500 py-12">No images in gallery yet.</p>
             ) : (
-              <>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-lg font-semibold text-[#0A1428]">Gallery Images</h2>
-                  <span className="text-sm text-gray-500">{uploadedImages.length} images</span>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                  {uploadedImages.map((image, index) => (
-                    <div key={index} className="relative group bg-gray-100 rounded-lg overflow-hidden">
-                      <img
-                        src={getApiUrl(`/gallery/${image}`)}
-                        alt={`Gallery ${index + 1}`}
-                        className="w-full h-48 object-cover"
-                        onError={(e) => {
-                          e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkeT0iLjM1ZW0iIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5OTk5Ij5JbWFnZSBub3QgZm91bmQ8L3RleHQ+PC9zdmc+';
-                        }}
-                      />
-                      <button
-                        onClick={() => deleteImage(image)}
-                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                        title="Delete image"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                      <div className="p-3">
-                        <p className="text-xs text-gray-500 truncate">{image}</p>
-                      </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {uploadedImages.map((image, idx) => (
+                  <div key={idx} className="relative group bg-gray-100 rounded-lg overflow-hidden">
+                    <img
+                      src={getApiUrl(`/gallery/${image}`)}
+                      alt={`Gallery ${idx+1}`}
+                      className="w-full h-48 object-cover"
+                      onError={(e) => e.target.src = 'https://via.placeholder.com/400x300?text=Image+Not+Found'}
+                    />
+                    <button
+                      onClick={() => deleteImage(image)}
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Delete image"
+                    >
+                      ✕
+                    </button>
+                    <div className="p-3">
+                      <p className="text-xs text-gray-500 truncate">{image}</p>
                     </div>
-                  ))}
-                </div>
-              </>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         )}

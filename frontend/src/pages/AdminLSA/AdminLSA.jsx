@@ -230,8 +230,8 @@ const AdminLSA = () => {
     activity: { therapist_actions_today: 0, spa_actions_today: 0, therapist_actions_week: 0, spa_actions_week: 0 }
   });
 
-  // API base URL (absolute backend API host + /api)
-  const API_BASE = `${API_CONFIG.baseUrl}/api`;
+  // Helper function to build API URLs
+  const apiUrl = (endpoint) => getApiUrl(`/api${endpoint}`);
 
   // Simple headers without authentication
   const getHeaders = () => {
@@ -290,7 +290,7 @@ const AdminLSA = () => {
   const checkForNewNotifications = async () => {
     try {
       // Get unread count
-      const countResponse = await axios.get(`${API_BASE}/lsa/notifications/unread`);
+      const countResponse = await axios.get(apiUrl('/lsa/notifications/unread'));
       if (countResponse.data.success) {
         const currentUnreadCount = countResponse.data.data.count;
 
@@ -323,7 +323,7 @@ const AdminLSA = () => {
 
       console.log('📊 Loading notification history with filters:', notificationFilters);
 
-      const response = await axios.get(`${API_BASE}/lsa/notifications/history?${params.toString()}`);
+      const response = await axios.get(apiUrl(`/lsa/notifications/history?${params.toString()}`));
 
       if (response.data.success) {
         setNotificationHistory(response.data.data);
@@ -354,7 +354,7 @@ const AdminLSA = () => {
   // Load notification summary statistics
   const loadNotificationSummary = async () => {
     try {
-      const response = await axios.get(`${API_BASE}/lsa/notifications/summary`);
+      const response = await axios.get(apiUrl('/lsa/notifications/summary'));
 
       if (response.data.success) {
         setNotificationSummary(response.data.data);
@@ -370,7 +370,7 @@ const AdminLSA = () => {
   // Load all notifications from database
   const loadNotifications = async () => {
     try {
-      const response = await axios.get(`${API_BASE}/lsa/notifications`);
+      const response = await axios.get(apiUrl('/lsa/notifications'));
       if (response.data.success) {
         setNotifications(response.data.data);
         // Update unread count
@@ -389,7 +389,7 @@ const AdminLSA = () => {
       setLoading(true);
 
       // Load therapist details
-      const therapistResponse = await axios.get(`${API_BASE}/lsa/therapists`);
+      const therapistResponse = await axios.get(apiUrl('/lsa/therapists'));
       if (therapistResponse.data.success) {
         const therapist = therapistResponse.data.data.find(t => t.id === therapistId || t.therapist_id === therapistId);
         if (therapist) {
@@ -425,7 +425,7 @@ const AdminLSA = () => {
     try {
       setLoading(true);
 
-      const response = await axios.post(`${API_BASE}/lsa/therapists/${selectedTherapist.id || selectedTherapist.therapist_id}/reject`, {
+      const response = await axios.post(apiUrl(`/lsa/therapists/${selectedTherapist.id || selectedTherapist.therapist_id}/reject`), {
         reason: rejectionReason
       });
 
@@ -464,7 +464,7 @@ const AdminLSA = () => {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE}/lsa/dashboard`);
+      const response = await axios.get(apiUrl('/lsa/dashboard'));
       if (response.data.success) {
         const data = response.data.data;
         const previousPending = dashboardStats.pendingTherapists;
@@ -513,7 +513,7 @@ const AdminLSA = () => {
   const loadSpas = async () => {
     try {
       setLoading(true);
-      let url = `${API_BASE}/lsa/spas?page=1&limit=50`;
+      let url = apiUrl('/lsa/spas?page=1&limit=50');
       if (spaFilters.status !== 'all') url += `&status=${spaFilters.status}`;
       if (spaFilters.verification !== 'all') url += `&verification_status=${spaFilters.verification}`;
       if (searchQuery) url += `&search=${searchQuery}`;
@@ -538,7 +538,7 @@ const AdminLSA = () => {
     try {
       setLoading(true);
       const prevCount = therapists.filter(t => t.status === 'pending').length;
-      const response = await axios.get(`${API_BASE}/lsa/therapists?status=${therapistTab}&page=1&limit=50`);
+      const response = await axios.get(apiUrl(`/lsa/therapists?status=${therapistTab}&page=1&limit=50`));
       if (response.data.success) {
         const newTherapists = response.data.data.therapists || [];
         setTherapists(newTherapists);
@@ -567,7 +567,7 @@ const AdminLSA = () => {
   const verifySpa = async (spaId, action, comments = '') => {
     try {
       setLoading(true);
-      const response = await axios.put(`${API_BASE}/lsa/spas/${spaId}/verify`, {
+      const response = await axios.put(apiUrl(`/lsa/spas/${spaId}/verify`), {
         action,
         admin_comments: comments
       });
@@ -597,11 +597,11 @@ const AdminLSA = () => {
       let response;
 
       if (action === 'approve') {
-        response = await axios.put(`${API_BASE}/lsa/therapists/${therapistId}/approve`, {
+        response = await axios.put(apiUrl(`/lsa/therapists/${therapistId}/approve`), {
           admin_comments: 'Approved by LSA Admin'
         });
       } else {
-        response = await axios.put(`${API_BASE}/lsa/therapists/${therapistId}/reject`, {
+        response = await axios.put(apiUrl(`/lsa/therapists/${therapistId}/reject`), {
           rejection_reason: reason,
           admin_comments: reason
         });
@@ -649,7 +649,7 @@ const AdminLSA = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API_BASE}/lsa/third-party/create`, {
+      const response = await axios.post(apiUrl('/lsa/third-party/create'), {
         username: thirdPartyCredentials.username,
         password: thirdPartyCredentials.password,
         duration: 8 // 8 hours expiry
@@ -683,7 +683,7 @@ const AdminLSA = () => {
   // Load government officer accounts
   const loadGovernmentOfficers = async () => {
     try {
-      const response = await axios.get(`${API_BASE}/lsa/third-party/accounts`);
+      const response = await axios.get(apiUrl('/lsa/third-party/accounts'));
       if (response.data.success) {
         setGovernmentOfficers(response.data.data);
       }
@@ -706,7 +706,7 @@ const AdminLSA = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await axios.delete(`${API_BASE}/lsa/third-party/account/${id}`);
+        const response = await axios.delete(apiUrl(`/lsa/third-party/account/${id}`));
         if (response.data.success) {
           await loadGovernmentOfficers(); // Refresh the list
           Swal.fire('Deleted!', 'The account has been deleted.', 'success');
@@ -724,7 +724,7 @@ const AdminLSA = () => {
       setLoading(true);
       console.log('🔄 Loading financial data for year:', year);
 
-      const response = await axios.get(`${API_BASE}/lsa/enhanced/financial/monthly?year=${year}`);
+      const response = await axios.get(apiUrl(`/lsa/enhanced/financial/monthly?year=${year}`));
 
       console.log('📥 Financial API response:', response.data);
 
@@ -749,7 +749,7 @@ const AdminLSA = () => {
       setLoading(true);
       console.log('🔄 Loading payment history...');
 
-      const response = await axios.get(`${API_BASE}/lsa/enhanced/payments/history`);
+      const response = await axios.get(apiUrl('/lsa/enhanced/payments/history'));
 
       if (response.data.success) {
         setPaymentHistory(response.data.data);
@@ -769,7 +769,7 @@ const AdminLSA = () => {
       setLoading(true);
       console.log('🔄 Loading bank transfers...');
 
-      const response = await axios.get(`${API_BASE}/lsa/enhanced/payments/bank-transfers`);
+      const response = await axios.get(apiUrl('/lsa/enhanced/payments/bank-transfers'));
 
       if (response.data.success) {
         setBankTransfers(response.data.data);
@@ -787,7 +787,7 @@ const AdminLSA = () => {
   const approveBankTransfer = async (paymentId, notes = '') => {
     try {
       setLoading(true);
-      const response = await axios.post(`${API_BASE}/lsa/enhanced/payments/${paymentId}/approve`, {
+      const response = await axios.post(apiUrl(`/lsa/enhanced/payments/${paymentId}/approve`), {
         notes
       });
 
@@ -819,7 +819,7 @@ const AdminLSA = () => {
   const rejectBankTransfer = async (paymentId, reason) => {
     try {
       setLoading(true);
-      const response = await axios.post(`${API_BASE}/lsa/enhanced/payments/${paymentId}/reject`, {
+      const response = await axios.post(apiUrl(`/lsa/enhanced/payments/${paymentId}/reject`), {
         reason
       });
 
@@ -2754,7 +2754,7 @@ const AdminLSA = () => {
                           {selectedTherapist.nic_attachment && (
                             <div className="flex space-x-1">
                               <button
-                                onClick={() => window.open(`${API_BASE}/lsa/therapists/${selectedTherapist.id}/document/nic_attachment?action=view`, '_blank')}
+                                onClick={() => window.open(apiUrl(`/lsa/therapists/${selectedTherapist.id}/document/nic_attachment?action=view`), '_blank')}
                                 className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
                                 title="View Document"
                               >
@@ -2763,7 +2763,7 @@ const AdminLSA = () => {
                               <button
                                 onClick={() => {
                                   const link = document.createElement('a');
-                                  link.href = `${API_BASE}/lsa/therapists/${selectedTherapist.id}/document/nic_attachment?action=download`;
+                                  link.href = apiUrl(`/lsa/therapists/${selectedTherapist.id}/document/nic_attachment?action=download`);
                                   link.download = `therapist_${selectedTherapist.id}_nic_attachment`;
                                   link.click();
                                 }}
@@ -2790,7 +2790,7 @@ const AdminLSA = () => {
                           {selectedTherapist.medical_certificate && (
                             <div className="flex space-x-1">
                               <button
-                                onClick={() => window.open(`${API_BASE}/lsa/therapists/${selectedTherapist.id}/document/medical_certificate?action=view`, '_blank')}
+                                onClick={() => window.open(apiUrl(`/lsa/therapists/${selectedTherapist.id}/document/medical_certificate?action=view`), '_blank')}
                                 className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
                                 title="View Document"
                               >
@@ -2799,7 +2799,7 @@ const AdminLSA = () => {
                               <button
                                 onClick={() => {
                                   const link = document.createElement('a');
-                                  link.href = `${API_BASE}/lsa/therapists/${selectedTherapist.id}/document/medical_certificate?action=download`;
+                                  link.href = apiUrl(`/lsa/therapists/${selectedTherapist.id}/document/medical_certificate?action=download`);
                                   link.download = `therapist_${selectedTherapist.id}_medical_certificate`;
                                   link.click();
                                 }}
@@ -2826,7 +2826,7 @@ const AdminLSA = () => {
                           {selectedTherapist.spa_center_certificate && (
                             <div className="flex space-x-1">
                               <button
-                                onClick={() => window.open(`${API_BASE}/lsa/therapists/${selectedTherapist.id}/document/spa_center_certificate?action=view`, '_blank')}
+                                onClick={() => window.open(apiUrl(`/lsa/therapists/${selectedTherapist.id}/document/spa_center_certificate?action=view`), '_blank')}
                                 className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
                                 title="View Document"
                               >
@@ -2835,7 +2835,7 @@ const AdminLSA = () => {
                               <button
                                 onClick={() => {
                                   const link = document.createElement('a');
-                                  link.href = `${API_BASE}/lsa/therapists/${selectedTherapist.id}/document/spa_center_certificate?action=download`;
+                                  link.href = apiUrl(`/lsa/therapists/${selectedTherapist.id}/document/spa_center_certificate?action=download`);
                                   link.download = `therapist_${selectedTherapist.id}_spa_certificate`;
                                   link.click();
                                 }}
@@ -2862,7 +2862,7 @@ const AdminLSA = () => {
                           {selectedTherapist.therapist_image && (
                             <div className="flex space-x-1">
                               <button
-                                onClick={() => window.open(`${API_BASE}/lsa/therapists/${selectedTherapist.id}/document/therapist_image?action=view`, '_blank')}
+                                onClick={() => window.open(apiUrl(`/lsa/therapists/${selectedTherapist.id}/document/therapist_image?action=view`), '_blank')}
                                 className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
                                 title="View Image"
                               >
@@ -2871,7 +2871,7 @@ const AdminLSA = () => {
                               <button
                                 onClick={() => {
                                   const link = document.createElement('a');
-                                  link.href = `${API_BASE}/lsa/therapists/${selectedTherapist.id}/document/therapist_image?action=download`;
+                                  link.href = apiUrl(`/lsa/therapists/${selectedTherapist.id}/document/therapist_image?action=download`);
                                   link.download = `therapist_${selectedTherapist.id}_image`;
                                   link.click();
                                 }}
@@ -3178,3 +3178,6 @@ const AdminLSA = () => {
 };
 
 export default AdminLSA;
+
+
+

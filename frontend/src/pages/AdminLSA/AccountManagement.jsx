@@ -39,8 +39,6 @@ const AccountManagement = () => {
         phone: ''
     });
 
-    const API_BASE = '/api';
-
     // Get admin ID from localStorage (assuming it's stored during login)
     const getAdminId = () => {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -62,7 +60,7 @@ const AccountManagement = () => {
     const loadAccounts = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_BASE}/lsa/account-management/accounts`, {
+            const response = await axios.get(getApiUrl('/api/lsa/account-management/accounts'), {
                 headers: getHeaders()
             });
 
@@ -83,7 +81,7 @@ const AccountManagement = () => {
 
     const loadStats = async () => {
         try {
-            const response = await axios.get(`${API_BASE}/lsa/account-management/stats`, {
+            const response = await axios.get(getApiUrl('/api/lsa/account-management/stats'), {
                 headers: getHeaders()
             });
 
@@ -111,7 +109,7 @@ const AccountManagement = () => {
         try {
             setLoading(true);
             const response = await axios.post(
-                `${API_BASE}/lsa/account-management/create`,
+                getApiUrl('/api/lsa/account-management/create'),
                 formData,
                 { headers: getHeaders() }
             );
@@ -164,7 +162,7 @@ const AccountManagement = () => {
             try {
                 setLoading(true);
                 const response = await axios.delete(
-                    `${API_BASE}/lsa/account-management/delete/${id}`,
+                    getApiUrl(`/api/lsa/account-management/delete/${id}`),
                     { headers: getHeaders() }
                 );
 
@@ -211,7 +209,7 @@ const AccountManagement = () => {
             try {
                 setLoading(true);
                 const response = await axios.post(
-                    `${API_BASE}/lsa/account-management/reset-password/${id}`,
+                    getApiUrl(`/api/lsa/account-management/reset-password/${id}`),
                     { new_password: newPassword },
                     { headers: getHeaders() }
                 );
@@ -250,7 +248,7 @@ const AccountManagement = () => {
             try {
                 setLoading(true);
                 const response = await axios.put(
-                    `${API_BASE}/lsa/account-management/update/${id}`,
+                    getApiUrl(`/api/lsa/account-management/update/${id}`),
                     { is_active: !currentStatus },
                     { headers: getHeaders() }
                 );

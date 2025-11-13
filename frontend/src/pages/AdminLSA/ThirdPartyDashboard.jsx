@@ -10,6 +10,7 @@ import {
     BriefcaseIcon
 } from '@heroicons/react/24/outline';
 import axios from 'axios';
+import { getApiUrl } from '../../utils/apiConfig';
 
 const ThirdPartyDashboard = () => {
     const [therapists, setTherapists] = useState([]);
@@ -41,7 +42,7 @@ const ThirdPartyDashboard = () => {
     const fetchTherapists = async (query) => {
         setLoading(true);
         try {
-            const response = await axios.get(`/api/third-party/history?search=${query}`, {
+            const response = await axios.get(getApiUrl(`/api/third-party/history?search=${query}`), {
                 headers: { Authorization: `Bearer ${localStorage.getItem('thirdPartyToken')}` }
             });
             setTherapists(response.data.therapists || []);
